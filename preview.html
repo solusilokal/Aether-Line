@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Aether Line - Sewa Busana Premium & Gaun Pesta (Live Preview)</title>
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="shortcut icon" type="image/png" href="./favicon.png">
+  <link rel="apple-touch-icon" href="./favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: {
+              light: '#FAF7F2',
+              DEFAULT: '#D4AF37',
+              dark: '#B78628'
+            }
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- React and Babel CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    body {
+      background-color: #F8F9FA;
+      color: #1a1a1a;
+      margin: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, .font-serif {
+      font-family: 'Playfair Display', serif;
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    details > summary { list-style: none; }
+    details > summary::-webkit-details-marker { display: none; }
+    
+    @keyframes slideUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-in {
+      animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // Pure SVG Icon component without DOM mutations
+    const Icon = ({ name, size = 18, className = "" }) => {
+      switch (name) {
+        case 'share':
+          return (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 ${className}`}>
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+              <polyline points="16 6 12 2 8 6"/>
+              <line x1="12" y1="2" x2="12" y2="15"/>
+            </svg>
+          );
+        case 'arrow-down':
+          return (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 ${className}`}>
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <polyline points="19 12 12 19 5 12"/>
+            </svg>
+          );
+        case 'sparkles':
+          return (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 ${className}`}>
+              <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>
+            </svg>
+          );
+        case 'heart':
+          return (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 ${className}`}>
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+            </svg>
+          );
+        case 'tag':
+          return (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 ${className}`}>
+              <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/>
+              <path d="M7 7h.01"/>
+            </svg>
+          );
+        case 'info':
+          return (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 ${className}`}>
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+          );
+        case 'history':
+          return (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 ${className}`}>
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><polyline points="3 3 3 8 8 8"/><polyline points="12 7 12 12 15 15"/>
+            </svg>
+          );
+        case 'shopping-bag':
+          return (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 ${className}`}>
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+          );
+        case 'check':
+          return (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 ${className}`}>
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          );
+        case 'help-circle':
+          return (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 ${className}`}>
+              <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          );
+        case 'quote':
+          return (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={`shrink-0 ${className}`}>
+              <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.75-2-2-2H4c-1.25 0-2 .75-2 2v6c0 1.25.75 2 2 2h4c0 2.5-2 4.5-5 5v3zm14 0c3 0 7-1 7-8V5c0-1.25-.75-2-2-2h-4c-1.25 0-2 .75-2 2v6c0 1.25.75 2 2 2h4c0 2.5-2 4.5-5 5v3z"/>
+            </svg>
+          );
+        case 'star':
+          return (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 ${className}`}>
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          );
+        case 'map-pin':
+          return (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 ${className}`}>
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+          );
+        case 'clock':
+          return (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 ${className}`}>
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          );
+        case 'calendar-days':
+          return (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 ${className}`}>
+              <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>
+            </svg>
+          );
+        case 'x':
+          return (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 ${className}`}>
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          );
+        case 'copy':
+          return (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`shrink-0 ${className}`}>
+              <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+            </svg>
+          );
+        case 'message-circle':
+          return (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={`shrink-0 ${className}`}>
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+            </svg>
+          );
+        default:
+          return null;
+      }
+    };
+
+    const pageData = {
+      name: "Aether Line",
+      phone: "6289529605601",
+      address: "Palangka Raya, Kalimantan Tengah",
+      title: "Sewa Busana Premium & Gaun Pesta",
+      description: "Tampil memukau di setiap momen spesial. Aether Line menyediakan koleksi gaun, kebaya, dan jas premium untuk disewa dengan kualitas terbaik dan fitting yang sempurna.",
+      profileImg: "./profile.png", 
+      heroImg: "./hero-bg.jpg",
+      links: {
+        instagram: "https://www.instagram.com/solusilokal.id",
+        maps: "https://www.google.com/maps/search/?api=1&query=Palangka+Raya", 
+        facebook: "https://facebook.com/", 
+        tiktok: "https://www.tiktok.com/@solusilokal.id" 
+      },
+      highlights: [
+        { text: "Koleksi Premium", icon: "sparkles" },
+        { text: "Bebas Biaya Laundry", icon: "heart" },
+        { text: "Fitting Langsung", icon: "tag" }
+      ],
+      about: "Aether Line didirikan dengan satu tujuan: membuat setiap orang bisa tampil elegan dan percaya diri tanpa harus mengeluarkan biaya mahal untuk membeli gaun atau jas yang mungkin hanya dipakai sekali. Kami mengkurasi koleksi busana dari desainer ternama dan merawatnya dengan standar butik.",
+      history: [
+        { year: "2021", title: "Awal Berdiri", desc: "Dimulai dari koleksi pribadi berisi 20 gaun pesta yang disewakan untuk teman terdekat." },
+        { year: "2022", title: "Ekspansi Butik", desc: "Membuka studio fitting pertama di Jakarta Selatan dan menambah koleksi kebaya modern." },
+        { year: "2023", title: "Koleksi Pria & Premium", desc: "Menghadirkan lini jas pria eksklusif dan mencapai 1000+ pelanggan setia." }
+      ],
+      catalog: [
+        { name: "Kebaya Modern", img: "./catalog-1.webp", price: "Mulai Rp 250.000" },
+        { name: "Evening Dress", img: "./catalog-2.webp", price: "Mulai Rp 350.000" },
+        { name: "Premium Suit", img: "./catalog-3.webp", price: "Mulai Rp 250.000" },
+        { name: "Bridesmaid Set", img: "./catalog-4.webp", price: "Mulai Rp 150.000" },
+        { name: "Wedding Gown", img: "./catalog-5.webp", price: "Mulai Rp 1.500.000" },
+      ],
+      pricing: [
+        { category: "Regular Dress", duration: "3 Hari", price: "Rp 150.000", items: ["Gaun standar", "Gratis laundry", "Tas gaun"] },
+        { category: "Gentleman Suit", duration: "3 Hari", price: "Rp 250.000", items: ["Jas & Celana", "Kemeja dalam", "Dasi/Bowtie"] },
+        { category: "Premium Kebaya / Gown", duration: "3 Hari", price: "Rp 350.000", items: ["Kebaya payet/gaun premium", "Bustier/Manset", "Gratis dry clean"] },
+        { category: "Exclusive Wedding Gown", duration: "3 Hari", price: "Rp 1.500.000", items: ["Gaun pengantin mewah", "Veil & Petticoat", "Free fitting & dry clean"] }
+      ],
+      faqs: [
+        { q: "Berapa lama durasi standar penyewaan?", a: "Durasi standar sewa adalah 3 hari. (H-1 Ambil, Hari H Pakai, H+1 Kembali)." },
+        { q: "Apakah perlu membayar uang jaminan (deposit)?", a: "Ya, kami memberlakukan deposit sebesar Rp 100.000 - Rp 500.000 tergantung jenis busana. Deposit akan dikembalikan 100% jika baju kembali dalam kondisi baik." },
+        { q: "Apakah harus dicuci sebelum dikembalikan?", a: "Tidak perlu. Biaya sewa sudah termasuk layanan laundry dan dry cleaning dari kami." },
+        { q: "Bolehkah mengecilkan atau membesarkan baju?", a: "Perubahan minor (peniti/jelujur sementara yang tidak merusak kain) diperbolehkan. Pemotongan kain sangat dilarang." }
+      ],
+      testimonials: [
+        { name: "Sarah Amelia", rating: 5, text: "Gaunnya wangi banget dan kualitasnya premium. Fitting di studionya juga nyaman, adminnya sangat membantu cari ukuran yang pas." },
+        { name: "Nadia Putri", rating: 5, text: "Sewa kebaya untuk wisuda di Aether Line bener-bener anti ribet. Koleksinya up-to-date dan harganya masih masuk akal." },
+        { name: "Dion W.", rating: 4, text: "Jasnya fit di badan, bahannya bagus gak bikin gerah. Proses sewa dan pengembalian deposit juga cepat." }
+      ]
+    };
+
+    function App() {
+      const [lightbox, setLightbox] = useState({ isOpen: false, image: null });
+      const [showStickyCTA, setShowStickyCTA] = useState(false);
+      const [showShareModal, setShowShareModal] = useState(false);
+      const [copied, setCopied] = useState(false);
+
+      useEffect(() => {
+        const handleScroll = () => {
+          setShowStickyCTA(window.scrollY > 400);
+        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+      }, []);
+
+      const openLightbox = (imgSrc) => {
+        setLightbox({ isOpen: true, image: imgSrc });
+        document.body.style.overflow = 'hidden'; 
+      };
+
+      const closeLightbox = () => {
+        setLightbox({ isOpen: false, image: null });
+        document.body.style.overflow = 'unset';
+      };
+
+      const scrollToForm = () => {
+        const el = document.getElementById('booking-form');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      };
+
+      const handleFormSubmit = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const name = formData.get('name');
+        const rentDate = formData.get('rentDate');
+        const outfitType = formData.get('outfitType');
+        const notes = formData.get('notes');
+        const waUrl = `https://wa.me/${pageData.phone}?text=Halo%20Admin%20${encodeURIComponent(pageData.name)},%20saya%20${encodeURIComponent(name)}.%20Saya%20ingin%20bertanya%20ketersediaan%20untuk%20sewa%20*${encodeURIComponent(outfitType)}*%20pada%20tanggal%20*${encodeURIComponent(rentDate)}*.%0A%0ACatatan%20Tambahan:%20${encodeURIComponent(notes || '-')}`;
+        window.open(waUrl, '_blank');
+      };
+
+      const handleShare = async () => {
+        try {
+          const isHttp = window.location.protocol === 'http:' || window.location.protocol === 'https:';
+          if (isHttp && typeof navigator.share === 'function') {
+            const shareData = { title: pageData.name, text: pageData.title, url: window.location.href };
+            let canShare = false;
+            try {
+              canShare = typeof navigator.canShare === 'function' ? navigator.canShare(shareData) : true;
+            } catch {
+              canShare = false;
+            }
+            if (canShare) {
+              await navigator.share(shareData);
+              return;
+            }
+          }
+        } catch (err) {
+          // User cancelled or share failed
+        }
+        setShowShareModal(true);
+      };
+
+      const copyToClipboard = () => {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(window.location.href).then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+          });
+        } else {
+          const tempInput = document.createElement('input');
+          tempInput.value = window.location.href;
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          document.execCommand('copy');
+          document.body.removeChild(tempInput);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        }
+      };
+
+      const shareLinks = {
+        whatsapp: () => window.open(`https://wa.me/?text=${encodeURIComponent(pageData.title + ' ' + window.location.href)}`, '_blank'),
+        facebook: () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank'),
+        twitter: () => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(pageData.name)}`, '_blank')
+      };
+
+      return (
+        <main className="w-full max-w-[480px] mx-auto relative shadow-[0_0_50px_rgba(212,175,55,0.12)] bg-white min-h-screen overflow-hidden pb-32">
+          
+          {/* Hero Section */}
+          <section className="relative w-full min-h-[90dvh] flex flex-col justify-end pb-12 px-6 bg-white">
+            <button
+              onClick={handleShare}
+              aria-label="Share this page"
+              className="absolute top-6 right-6 z-20 p-3 bg-white/40 backdrop-blur-md rounded-full border border-[#D4AF37]/30 text-[#D4AF37] hover:bg-white/70 transition-all shadow-sm"
+            >
+              <Icon name="share" size={20} />
+            </button>
+
+            <div className="absolute inset-0 z-0">
+              <img 
+                src={pageData.heroImg} 
+                alt={pageData.name} 
+                className="w-full h-full object-cover object-top opacity-75"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-white via-white/75 to-white/10"></div>
+            </div>
+
+            <div className="relative z-10 flex flex-col items-center text-center mt-32">
+              <div className="w-24 h-24 rounded-full p-2 bg-white mb-6 shadow-xl border border-[#D4AF37]/50 flex items-center justify-center overflow-hidden">
+                <img 
+                  src={pageData.profileImg} 
+                  alt="Profile" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+
+              <h1 className="text-4xl font-bold text-[#1a1a1a] mb-3 leading-tight tracking-wide font-serif">
+                {pageData.name}
+              </h1>
+              <p className="text-stone-600 font-light text-sm leading-relaxed mb-6 max-w-[95%]">
+                {pageData.description}
+              </p>
+
+              <div className="flex flex-col gap-3 w-full max-w-sm mb-8">
+                <div className="grid grid-cols-2 gap-3">
+                  <a href={pageData.links.instagram} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-white hover:bg-[#FAF7F2] transition-all text-[#D4AF37] shadow-sm text-[14px] font-bold border border-[#D4AF37]/50">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                      <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+                    </svg> Instagram
+                  </a>
+                  <a href={pageData.links.tiktok} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-white hover:bg-[#FAF7F2] transition-all text-[#D4AF37] shadow-sm text-[14px] font-bold border border-[#D4AF37]/50">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                    </svg> TikTok
+                  </a>
+                </div>
+                <a href="#lokasi" className="flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-white hover:bg-[#FAF7F2] transition-all text-[#D4AF37] shadow-sm text-[14px] font-bold w-full border border-[#D4AF37]/50">
+                  <Icon name="map-pin" size={18} /> Lokasi
+                </a>
+              </div>
+
+              <button 
+                onClick={scrollToForm}
+                className="group relative flex items-center justify-center gap-3 w-full max-w-sm py-4 bg-gradient-to-r from-[#D4AF37] to-[#B78628] text-white rounded-xl font-bold text-[13px] uppercase tracking-widest hover:brightness-110 transition-all shadow-lg shadow-[#D4AF37]/20"
+              >
+                Sewa Sekarang
+                <Icon name="arrow-down" size={18} className="group-hover:translate-y-1 transition-transform" />
+              </button>
+            </div>
+          </section>
+
+          {/* Highlights */}
+          <section className="py-6 px-6 bg-gradient-to-r from-[#D4AF37] to-[#B78628] shadow-inner">
+            <div className="flex flex-wrap justify-center gap-4 w-full max-w-md mx-auto">
+              {pageData.highlights.map((item, idx) => (
+                <span key={idx} className="flex items-center gap-2 px-3 py-1.5 text-xs text-white font-medium">
+                  <Icon name={item.icon} size={14} />
+                  {item.text}
+                </span>
+              ))}
+            </div>
+          </section>
+
+          {/* Tentang Kami */}
+          <section className="py-12 px-6 bg-white border-b border-[#FAF7F2]">
+            <div className="mb-6 flex flex-col items-center text-center">
+              <Icon name="info" size={28} className="text-[#D4AF37] mb-3" />
+              <h2 className="text-2xl font-bold text-[#1a1a1a] font-serif mb-4">Tentang Kami</h2>
+              <div className="w-12 h-[2px] bg-[#D4AF37]"></div>
+            </div>
+            <p className="text-[#4a4a4a] text-[14px] leading-[1.8] text-justify mx-auto mb-10">
+              {pageData.about}
+            </p>
+
+            <div className="mb-6 flex flex-col items-start gap-2">
+              <h3 className="text-xl font-bold text-[#1a1a1a] font-serif flex items-center gap-2">
+                <Icon name="history" size={20} className="text-[#D4AF37]" /> Perjalanan Kami
+              </h3>
+            </div>
+            
+            <div className="pl-4 border-l-2 border-[#D4AF37]/30 flex flex-col gap-6 relative">
+              {pageData.history.map((hist, idx) => (
+                <div key={idx} className="relative pl-4">
+                  <div className="absolute w-3 h-3 bg-[#D4AF37] rounded-full -left-[23px] top-1.5 border-4 border-white shadow-sm"></div>
+                  <span className="text-[#D4AF37] font-bold text-xs tracking-wider">{hist.year}</span>
+                  <h4 className="text-[#1a1a1a] font-semibold text-[15px] mt-0.5">{hist.title}</h4>
+                  <p className="text-stone-500 text-xs mt-1 leading-relaxed">{hist.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Katalog Busana */}
+          <section id="katalog" className="pt-12 pb-8 bg-[#FAF7F2] border-b border-stone-100">
+            <div className="px-6 mb-6 flex flex-col gap-1">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-[#1a1a1a] font-serif">Katalog Busana</h2>
+                <Icon name="shopping-bag" size={20} className="text-[#D4AF37]" />
+              </div>
+              <p className="text-stone-500 text-xs">Pilih koleksi terbaik untuk momen spesialmu.</p>
+            </div>
+            
+            <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-6 pb-6 no-scrollbar">
+              {pageData.catalog.map((item, idx) => (
+                <div 
+                  key={idx}
+                  className="snap-center shrink-0 w-[220px] rounded-2xl overflow-hidden cursor-pointer group bg-white border border-[#D4AF37]/20 shadow-sm flex flex-col"
+                >
+                  <div 
+                    className="w-full aspect-[3/4] relative overflow-hidden"
+                    onClick={() => openLightbox(item.img)}
+                  >
+                    <img 
+                      src={item.img} 
+                      alt={item.name} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <span className="bg-white/95 backdrop-blur text-[#1a1a1a] text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest border border-[#D4AF37]/30">Perbesar</span>
+                    </div>
+                  </div>
+                  <div className="p-4 text-center border-t border-[#D4AF37]/10">
+                    <h3 className="font-semibold text-[#1a1a1a] text-sm">{item.name}</h3>
+                    <p className="text-[#D4AF37] font-bold text-[13px] mt-1">{item.price}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Daftar Harga Sewa */}
+          <section className="py-12 px-6 bg-white border-b border-[#FAF7F2]">
+            <div className="mb-8 flex flex-col items-center text-center gap-2">
+              <Icon name="tag" size={24} className="text-[#D4AF37] mb-1" />
+              <h2 className="text-2xl font-bold text-[#1a1a1a] font-serif">Daftar Harga Sewa</h2>
+              <p className="text-stone-500 text-xs mt-1">Transparan tanpa biaya tersembunyi.</p>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              {pageData.pricing.map((pkg, idx) => (
+                <div key={idx} className="bg-white border border-[#D4AF37]/30 p-5 rounded-2xl relative overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                  <div className="absolute top-0 right-0 bg-gradient-to-r from-[#D4AF37] to-[#B78628] text-white text-[10px] font-bold px-4 py-1.5 rounded-bl-xl uppercase tracking-wider">
+                    {pkg.duration}
+                  </div>
+                  <h3 className="text-base font-bold text-[#1a1a1a] mb-1">{pkg.category}</h3>
+                  <div className="text-xl font-bold text-[#D4AF37] mb-4 font-serif">{pkg.price} <span className="text-xs font-normal text-stone-400">/ sewa</span></div>
+                  
+                  <ul className="flex flex-col gap-2">
+                    {pkg.items.map((item, i) => (
+                      <li key={i} className="flex items-center gap-2 text-stone-600 text-xs">
+                        <Icon name="check" size={14} className="text-[#D4AF37]" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* FAQ */}
+          <section className="py-12 px-6 bg-[#FAF7F2] border-b border-stone-100">
+            <div className="mb-8 flex flex-col gap-1">
+              <h2 className="text-2xl font-bold text-[#1a1a1a] font-serif flex items-center gap-2">
+                 <Icon name="help-circle" size={22} className="text-[#D4AF37]" /> FAQ
+              </h2>
+              <p className="text-stone-500 text-xs">Pertanyaan yang sering diajukan oleh pelanggan.</p>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              {pageData.faqs.map((faq, idx) => (
+                <details key={idx} className="group bg-white border border-[#D4AF37]/20 rounded-xl overflow-hidden shadow-sm">
+                  <summary className="flex items-center justify-between font-semibold text-[#1a1a1a] text-[13px] p-4 cursor-pointer select-none">
+                    {faq.q}
+                    <span className="transition group-open:rotate-180">
+                      <Icon name="arrow-down" size={16} className="text-[#D4AF37]" />
+                    </span>
+                  </summary>
+                  <div className="text-stone-600 text-xs leading-relaxed px-4 pb-4 border-t border-[#D4AF37]/10 pt-3">
+                    {faq.a}
+                  </div>
+                </details>
+              ))}
+            </div>
+          </section>
+
+          {/* Testimoni */}
+          <section className="py-12 px-6 bg-white border-b border-[#FAF7F2]">
+            <div className="mb-8 flex flex-col gap-1 text-center items-center">
+              <Icon name="quote" size={28} className="text-[#D4AF37] mb-2 opacity-60" />
+              <h2 className="text-2xl font-bold text-[#1a1a1a] font-serif">Kata Mereka</h2>
+            </div>
+
+            <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 no-scrollbar">
+              {pageData.testimonials.map((testi, idx) => (
+                <div key={idx} className="snap-center shrink-0 w-[280px] bg-white p-6 rounded-2xl border border-[#D4AF37]/30 shadow-sm flex flex-col gap-4">
+                  <div className="flex items-center gap-1 text-[#D4AF37]">
+                    {[...Array(testi.rating)].map((_, i) => (
+                      <Icon key={i} name="star" size={14} className="fill-[#D4AF37]" />
+                    ))}
+                  </div>
+                  <p className="text-stone-600 text-sm leading-relaxed italic">"{testi.text}"</p>
+                  <div className="mt-auto pt-4 border-t border-[#D4AF37]/10 flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-[#FAF7F2] border border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37] font-bold text-xs uppercase">
+                      {testi.name.charAt(0)}
+                    </div>
+                    <span className="text-[13px] font-bold text-[#1a1a1a]">{testi.name}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Lokasi Studio */}
+          <section id="lokasi" className="py-12 px-6 bg-[#FAF7F2] border-b border-stone-100">
+            <div className="mb-6 flex flex-col gap-1">
+              <h2 className="text-2xl font-bold text-[#1a1a1a] font-serif flex items-center gap-2">
+                 <Icon name="map-pin" size={22} className="text-[#D4AF37]" /> Lokasi Studio
+              </h2>
+              <p className="text-stone-500 text-xs">Kunjungi studio kami untuk melakukan fitting secara langsung.</p>
+            </div>
+            
+            <div className="bg-white p-5 rounded-2xl border border-[#D4AF37]/20 shadow-sm flex flex-col gap-4">
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-[#FAF7F2] rounded-lg text-[#D4AF37] mt-0.5">
+                  <Icon name="map-pin" size={18} />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-[#1a1a1a] mb-1">{pageData.name} Studio</h4>
+                  <p className="text-stone-500 text-xs leading-relaxed">{pageData.address}</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-[#FAF7F2] rounded-lg text-[#D4AF37] mt-0.5">
+                  <Icon name="clock" size={18} />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-[#1a1a1a] mb-1">Jam Operasional</h4>
+                  <p className="text-stone-500 text-xs leading-relaxed">Senin - Minggu: 09:00 - 20:00<br/><span className="italic text-[#D4AF37]">*Harap reservasi sebelum fitting</span></p>
+                </div>
+              </div>
+
+              <a 
+                href={pageData.links.maps} 
+                target="_blank" 
+                rel="noreferrer"
+                className="mt-2 w-full py-3 bg-white border border-[#D4AF37] text-[#D4AF37] text-xs font-bold uppercase tracking-widest rounded-xl text-center hover:bg-[#FAF7F2] transition-colors"
+              >
+                Buka di Google Maps
+              </a>
+            </div>
+          </section>
+
+          {/* Booking Form */}
+          <section id="booking-form" className="py-12 px-6 bg-white">
+            <div className="bg-white border border-[#D4AF37]/40 rounded-[2rem] p-8 shadow-xl relative overflow-hidden">
+              <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#D4AF37]/10 rounded-full pointer-events-none blur-2xl"></div>
+              <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-[#D4AF37]/10 rounded-full pointer-events-none blur-2xl"></div>
+              
+              <div className="relative z-10 mb-8 text-center">
+                <h2 className="text-2xl font-bold text-[#1a1a1a] mb-2 font-serif">Reservasi Baju</h2>
+                <p className="text-stone-500 text-xs leading-relaxed">Hubungi admin kami untuk mengecek ketersediaan busana untuk tanggal acara Anda.</p>
+              </div>
+              
+              <form onSubmit={handleFormSubmit} className="flex flex-col gap-4 relative z-10">
+                <div className="flex flex-col gap-2">
+                  <label className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-widest ml-1">Nama Lengkap</label>
+                  <input 
+                    type="text" 
+                    name="name" 
+                    required
+                    placeholder="Ketik nama Anda"
+                    className="w-full bg-[#FAF7F2] border border-[#D4AF37]/30 rounded-xl px-4 py-3.5 text-sm text-[#1a1a1a] placeholder-stone-400 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]/50 transition-all"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2 w-full">
+                  <label className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-widest ml-1">Tanggal Sewa (Hari H)</label>
+                  <input 
+                    type="date" 
+                    name="rentDate" 
+                    required
+                    className="w-full bg-[#FAF7F2] border border-[#D4AF37]/30 rounded-xl px-4 py-3.5 text-sm text-[#1a1a1a] placeholder-stone-400 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]/50 transition-all"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-widest ml-1">Kategori Baju</label>
+                  <select 
+                    name="outfitType" 
+                    required
+                    className="w-full bg-[#FAF7F2] border border-[#D4AF37]/30 rounded-xl px-4 py-3.5 text-sm text-[#1a1a1a] focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]/50 transition-all appearance-none"
+                  >
+                    <option value="" className="text-stone-500">Pilih kategori...</option>
+                    <option value="Kebaya Modern">Kebaya Modern</option>
+                    <option value="Evening Dress">Evening Dress (Gaun Malam)</option>
+                    <option value="Wedding Gown">Wedding Gown (Gaun Pengantin)</option>
+                    <option value="Jas Pria">Jas Pria</option>
+                    <option value="Lainnya">Lainnya</option>
+                  </select>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="text-[10px] font-bold text-[#D4AF37] uppercase tracking-widest ml-1">Catatan Tambahan</label>
+                  <textarea 
+                    name="notes" 
+                    rows="2"
+                    placeholder="Cth: Butuh ukuran L, warna sage green..."
+                    className="w-full bg-[#FAF7F2] border border-[#D4AF37]/30 rounded-xl px-4 py-3.5 text-sm text-[#1a1a1a] placeholder-stone-400 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]/50 transition-all resize-none"
+                  ></textarea>
+                </div>
+
+                <button 
+                  type="submit"
+                  className="w-full mt-4 bg-gradient-to-r from-[#D4AF37] to-[#B78628] text-white font-bold text-[13px] uppercase tracking-widest py-4 rounded-xl flex items-center justify-center gap-2 hover:brightness-110 transition-colors shadow-md shadow-[#D4AF37]/20"
+                >
+                  Kirim via WhatsApp
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" className="text-white">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                  </svg>
+                </button>
+              </form>
+            </div>
+          </section>
+
+          {/* Footer */}
+          <footer className="pt-8 pb-12 text-center flex flex-col items-center justify-center mx-6 mt-4">
+            <div className="w-full h-px bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-transparent mb-8"></div>
+            
+            <div className="w-16 h-16 rounded-full p-2 bg-white mb-4 shadow-sm border border-[#D4AF37]/30 flex items-center justify-center overflow-hidden">
+              <img 
+                src={pageData.profileImg} 
+                alt={pageData.name} 
+                className="w-full h-full object-contain"
+              />
+            </div>
+
+            <h2 className="font-serif text-xl font-bold text-[#1a1a1a] mb-1.5">{pageData.name}</h2>
+            <p className="text-stone-500 text-xs max-w-[250px] mb-6">{pageData.address}</p>
+
+            <p className="text-stone-400 text-[10px]">
+              © {new Date().getFullYear()} {pageData.name}. All rights reserved.
+            </p>
+            
+            <a 
+              href="https://www.solusilokal.id" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-stone-400 text-[10px] mt-2 tracking-wide font-medium hover:text-[#D4AF37] transition-colors"
+            >
+              powered by solusilokal.id
+            </a>
+          </footer>
+
+          {/* Sticky CTA */}
+          <div 
+            className={`fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-[432px] z-40 transition-all duration-500 ease-out ${
+              showStickyCTA ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0 pointer-events-none'
+            }`}
+          >
+            <button 
+              onClick={scrollToForm}
+              className="w-full flex items-center justify-between px-6 py-4 bg-white/95 backdrop-blur-xl border border-[#D4AF37]/40 rounded-2xl text-[#1a1a1a] shadow-[0_10px_40px_rgba(212,175,55,0.15)] hover:bg-[#FAF7F2] active:scale-[0.98] transition-all"
+            >
+              <span className="font-bold text-[13px] tracking-widest uppercase text-[#1a1a1a]">Sewa Sekarang</span>
+              <div className="bg-gradient-to-r from-[#D4AF37] to-[#B78628] text-white p-2 rounded-xl">
+                <Icon name="calendar-days" size={18} />
+              </div>
+            </button>
+          </div>
+
+          {/* Lightbox Modal */}
+          {lightbox.isOpen && (
+            <div 
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm"
+              onClick={closeLightbox}
+            >
+              <button 
+                className="absolute top-6 right-6 p-3 bg-white/10 rounded-full text-white hover:bg-white/20 transition-all z-50"
+                onClick={closeLightbox}
+              >
+                <Icon name="x" size={20} />
+              </button>
+              <div className="w-full max-w-4xl max-h-[100dvh] p-4 flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                <img 
+                  src={lightbox.image} 
+                  alt="Zoomed View" 
+                  className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Share Modal */}
+          {showShareModal && (
+            <div
+              className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm sm:items-center transition-opacity"
+              onClick={() => setShowShareModal(false)}
+            >
+              <div
+                className="w-full max-w-[480px] bg-white border-t sm:border border-[#D4AF37]/30 sm:rounded-3xl rounded-t-3xl p-6 relative overflow-hidden animate-in duration-300"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex justify-center items-center mb-6 relative">
+                  <h3 className="text-[#1a1a1a] font-bold text-[15px]">Bagikan Link Katalog</h3>
+                  <button
+                    onClick={() => setShowShareModal(false)}
+                    className="absolute right-0 p-1 text-stone-500 hover:bg-[#FAF7F2] rounded-full transition-all"
+                  >
+                    <Icon name="x" size={20} />
+                  </button>
+                </div>
+
+                <div className="flex overflow-x-auto gap-3 pb-2 no-scrollbar justify-center px-1 mb-4">
+                  <div className="flex flex-col items-center gap-2 min-w-[76px]">
+                    <button onClick={copyToClipboard} className="w-[60px] h-[60px] rounded-full bg-[#FAF7F2] border border-[#D4AF37]/20 flex items-center justify-center text-[#D4AF37] hover:bg-stone-100 transition-all shadow-sm">
+                      {copied ? <Icon name="check" size={26} className="text-[#D4AF37]" /> : <Icon name="copy" size={26} />}
+                    </button>
+                    <span className="text-[11px] font-semibold text-stone-600 text-center">{copied ? 'Tersalin' : 'Salin Tautan'}</span>
+                  </div>
+                  <div className="flex flex-col items-center gap-2 min-w-[76px]">
+                    <button onClick={shareLinks.twitter} className="w-[60px] h-[60px] rounded-full bg-stone-900 flex items-center justify-center text-white hover:bg-stone-800 transition-all shadow-sm">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                      </svg>
+                    </button>
+                    <span className="text-[11px] font-semibold text-stone-600 text-center">X</span>
+                  </div>
+                  <div className="flex flex-col items-center gap-2 min-w-[76px]">
+                    <button onClick={shareLinks.facebook} className="w-[60px] h-[60px] rounded-full bg-[#1877F2] flex items-center justify-center text-white hover:brightness-110 transition-all shadow-sm">
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                      </svg>
+                    </button>
+                    <span className="text-[11px] font-semibold text-stone-600 text-center">Facebook</span>
+                  </div>
+                  <div className="flex flex-col items-center gap-2 min-w-[76px]">
+                    <button onClick={shareLinks.whatsapp} className="w-[60px] h-[60px] rounded-full bg-[#25D366] flex items-center justify-center text-white hover:brightness-110 transition-all shadow-sm">
+                      <Icon name="message-circle" size={26} />
+                    </button>
+                    <span className="text-[11px] font-semibold text-stone-600 text-center">WhatsApp</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </main>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
