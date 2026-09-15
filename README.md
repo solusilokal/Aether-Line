@@ -30,8 +30,8 @@ Landing page & katalog digital interaktif untuk **Aether Line**, penyedia sewa g
 
 ### 1. Clone Repositori
 ```bash
-git clone https://github.com/solusilokal/-Aether-Line.git
-cd -Aether-Line
+git clone https://github.com/solusilokal/Aether-Line.git
+cd Aether-Line
 ```
 
 ### 2. Instal Dependensi
